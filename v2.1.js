@@ -1,3 +1,9 @@
+// clasp
+// npm i -g @google/clasp
+// npm i @types/google-apps-script
+// clasp clone ""
+// clasp push/pull
+
 function createMainPage() {
   const name = 'v2.1'
   var spreadsheet = SpreadsheetApp.getActiveSpreadsheet()
@@ -29,7 +35,7 @@ function createMainPage() {
     // Data Validation
 
     // Build it out
-    applyFormulasAndStyles(sheet, formulas[name])
+    applyFormulasAndStyles(sheet, content[name])
 
     // Setup the hidden section
     sheet.getRange("AQ1:BC" + sheet.getMaxRows())

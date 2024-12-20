@@ -28,10 +28,18 @@ function swapFormula(range, formula){
 
 function sizeSheet(sheet, numRows, numColumns){
   var currentRows = sheet.getMaxRows()
-  if (currentRows < numRows) sheet.insertRowsAfter(currentRows, numRows - currentRows)
+  if (currentRows < numRows) {
+    sheet.insertRowsAfter(currentRows, numRows - currentRows)
+  } else if (currentRows > numRows){
+    sheet.deleteRows(numRows+1, currentRows-numRows)
+  }
 
   var currentColumns = sheet.getMaxColumns()
-  if (currentColumns < numColumns) sheet.insertColumnsAfter(currentColumns, numColumns - currentColumns)
+  if (currentColumns < numColumns){
+    sheet.insertColumnsAfter(currentColumns, numColumns - currentColumns)
+  } else if (currentColumns > numColumns){
+    sheet.deleteColumns(numColumns+1, currentColumns-numColumns)
+  }
 }
 
 function protectSheet(sheet, excemptions){
@@ -83,7 +91,7 @@ function applyFormulasAndStyles(sheet, sheetFormulas) {
     if (cellAttributes.backgroundColor) range.setBackground(cellAttributes.backgroundColor)
     if (cellAttributes.textColor) range.setFontColor(cellAttributes.textColor)
     if (cellAttributes.horizontalAlignment) range.setHorizontalAlignment(cellAttributes.horizontalAlignment)
-    if (cellAttributes.verticalAlignment) range.setHorizontalAlignment(cellAttributes.verticalAlignment)
+    if (cellAttributes.verticalAlignment) range.setVerticalAlignment(cellAttributes.verticalAlignment)
     if (cellAttributes.notes) range.setNote(cellAttributes.notes)
     if (cellAttributes.numberFormat) range.setNumberFormat(cellAttributes.numberFormat)
 

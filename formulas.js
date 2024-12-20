@@ -9,7 +9,7 @@ const lightGrey3 = "#f3f3f3"
 const lightGrey20 = "#dddddd"
 const black = "#000000"
 
-const formulas = {
+const content = {
     'v2.1': [
       {
         range: "A2:R5",
@@ -103,11 +103,30 @@ const formulas = {
         formula: `=if($T$5<>"",array_constrain(iferror(filter(BA6:BA15,BA6:BA15<>"",isnumber(find("10",BA6:BA15))),"10+dex"),1,1),"")`
       },
       {
+        range: "A6:A7",
+        merge: true,
+        formula: `=IMAGE("https://imgur.com/ABQY3Ko.png",2)`
+      },
+      {
+        range: "B6:B7",
+        merge: true,
+        formula: `=IMAGE("https://imgur.com/mswZvmb.png",2)`
+      },
+      {
+        range: "C6:R7",
+        merge: true,
+        fontSize: 20,
+        fontStyle: 'italic',
+        verticalAlignment: "TOP",
+        horizontalAlignment: "CENTER"
+      },
+      {
         range: "T6:AD6",
         fontFamily: hiddenFontFamily,
         fontSize: 7,
         merge: true,
         value: `CLASS(ES) & LEVEL(S)`,
+        verticalAlignment: "TOP",
         textColor: darkGrey3,
         border: {
             top: true,
@@ -120,6 +139,7 @@ const formulas = {
          fontFamily: hiddenFontFamily,
          fontSize: 7,
          value: `PLAYER NAME`,
+         verticalAlignment: "TOP",
          textColor: darkGrey3,
          border: {
             top: true,
@@ -130,6 +150,8 @@ const formulas = {
         range: "AL6:AM7",
         merge: true,
         fontSize: 20,
+        verticalAlignment: "TOP",
+        horizontalAlignment: "CENTER",
         formula: `=if(AE7<>"",if(AE7<300,1,if(AE7<900,2,if(AE7<2700,3,if(AE7<6500,4,if(AE7<14000,5,if(AE7<23000,6,if(AE7<34000,7,if(AE7<48000,8,if(AE7<64000,9,if(AE7<85000,10,if(AE7<100000,11,if(AE7<120000,12,if(AE7<140000,13,if(AE7<165000,14,if(AE7<195000,15,if(AE7<225000,16,if(AE7<265000,17,if(AE7<305000,18,if(AE7<355000,19,20))))))))))))))))))),"")`
       },
       {
@@ -246,11 +268,17 @@ const formulas = {
         formula: `=if(and(AR7<>"",isnumber(find(lower(AR7),lower($T$5)))),int(substitute(if(regexmatch(proper($T$5),proper(AR7)&" [0-9]+"),regexextract(proper($T$5),proper(AR7)&" [0-9]+"),level),proper(AR7)&" ","")),"")`
       },
       {
+        range: "A8:R9",
+        merge: true,
+        formula: `=if(C174="",if(isnumber(find("Han",C6)),image("https://i.imgur.com/zOBptnJ.png",2),if( and(AV16<>"",countif(AQ155:AQ180,AV16)),image("https://i.imgur.com/zOBptnJ.png",2),image(AS156,2))),image(vlookup(C174,AQ155:AS180,3,false),2))`
+      },
+      {
         range: "T8:AD8",
         merge: true,
         fontFamily: hiddenFontFamily,
         fontSize: 7,
         textColor: darkGrey3,
+        verticalAlignment: "TOP",
         formula: `=if(and(T7<>"",AQ5=""),"To use a custom race, add it on the 'Race Info' tab.","RACE")`,
         border: {
             top: true,
@@ -261,6 +289,7 @@ const formulas = {
         range: "AE8:AG8",
         merge: true,
         value: "EXPERIENCE",
+        verticalAlignment: "TOP",
         fontFamily: hiddenFontFamily,
         fontSize: 7,
         textColor: darkGrey3,
@@ -273,6 +302,7 @@ const formulas = {
         range: "AH8:AJ8",
         merge: true,
         value: "NEXT LEVEL",
+        verticalAlignment: "TOP",
         fontFamily: hiddenFontFamily,
         fontSize: 7,
         textColor: darkGrey3,
@@ -372,11 +402,41 @@ const formulas = {
         formula: `=if(and(AR10<>"",isnumber(find(lower(AR10),lower($T$5)))),int(substitute(if(regexmatch(proper($T$5),proper(AR10)&" [0-9]+"),regexextract(proper($T$5),proper(AR10)&" [0-9]+"),level),proper(AR10)&" ","")),"")`
       },
       {
+        range: "B11:B41",
+        merge: true,
+        formula: `=IMAGE("http://i.imgur.com/VUGDDJt.png",2)`,
+        border: {
+            top: true,
+            bottom: true,
+            color: lightGrey20
+        }
+      },
+      {
+        range: "C11",
+        backgroundColor: lightGrey20,
+        notes: `Enter your base ability score, before any modifiers, in the cell in this column UNDER each Ability Score block. The cells with 00 in them.`
+      },
+      {
+        range: "D11",
+        backgroundColor: lightGrey20, 
+        notes: `Enter Ability Score Improvements and species Ability CHOICES in the cell in this column UNDER each Ability Score block.\n\nWhen this cell turns blue, it means you have racial Ability Scores Increases to choose below.`
+      },
+      {
+        range: "E11:E41",
+        merge: true,
+        formula: `=IMAGE("http://i.imgur.com/u9a6TBA.png",2)`,
+        border: {
+            top: true,
+            bottom: true,
+            color: lightGrey20
+        }
+      },
+      {
         range: "H11:I12",
         merge: true,
         fontSize: 24,
-        horizontalAlignment: 'center',
-        verticalAlignment: 'center',
+        horizontalAlignment: 'CENTER',
+        verticalAlignment: 'CENTER',
         numberFormat: `✧;✧;;✧`,
         value: "0"
       },
@@ -414,8 +474,141 @@ const formulas = {
         border: {
             top: true,
             bottom: true,
+            right: true,
             color: lightGrey20
         }
+      },
+      {
+        range: "U11:U15",
+        merge: true,
+        formula: `=IMAGE("http://i.imgur.com/C5Lv5CM.png",2)`,
+        border: {
+            top: true,
+            bottom: true,
+            left: true,
+            color: lightGrey20
+        }
+      },
+      {
+        range: "V11:W11",
+        merge: true,
+        backgroundColor: lightGrey20,
+        formula: `=if(V15<>"",V15,\nif(regexmatch(substitute(substitute(Additional!AR79,"(",""),")",""),"advantage on[a-z. ]+?initiative"),\nif(regexmatch(substitute(substitute(Additional!AR79,"(",""),")",""),"sadvantage on[.a-z ]+?initiative"),\n"dis","adv"),if(countif(BC6:BC15,"adv")>0,"adv","")))`,
+        textColor: lightGrey20,
+        numberFormat: `;;;`,
+      },
+      {
+        range: "X11:X15",
+        merge: true,
+        formula: `=IMAGE("https://i.imgur.com/k6zj6md.png",2)`,
+        border: {
+            top: true,
+            bottom: true,
+            right: true,
+            color: lightGrey20
+        }
+      },
+      {
+        range: "Y11:Y15",
+        merge: true,
+        formula: `=IMAGE("http://i.imgur.com/C5Lv5CM.png",2)`,
+        border: {
+            top: true,
+            bottom: true,
+            left: true,
+            color: lightGrey20
+        }
+      },
+      {
+        range: "Z11:AA11",
+        merge: true,
+        backgroundColor: lightGrey20
+      },
+      {
+        range: "AB11:AB28",
+        merge: true,
+        formula: `=IMAGE("http://i.imgur.com/pJkkaty.png",2)`,
+        border: {
+            top: true,
+            bottom: true,
+            color: lightGrey20
+        }
+      },
+      {
+        range: "AC11",
+        fontFamily: hiddenFontFamily,
+        fontSize: 6,
+        textColor: darkGrey1,
+        notes: `IF you roll for HP, input your maximum HP according to hit die from 1st level here without con mod, then each line after is for the amount rolled on hit dice for each level. If you enter nothing in this column, it assumes average.`
+      },
+      {
+        range: "AD11:AD28",
+        merge: true,
+        formula: `=IMAGE("http://i.imgur.com/yqyqC2t.png",2)`,
+        border: {
+            top: true,
+            bottom: true,
+            color: lightGrey20
+        }
+      },
+      {
+        range: "AE11:AI11",
+        merge: true,
+        value: "BACKGROUND:",
+        horizontalAlignment: "RIGHT",
+        verticalAlignment: "MIDDLE",
+        textColor: black, 
+        backgroundColor: lightGrey20,
+        fontFamily: hiddenFontFamily,
+        fontSize: 8
+      },
+      {
+        range: "AJ11:AN11",
+        merge: true,
+        fontSize: 9,
+        textColor: black,
+        backgroundColor: lightGrey20,
+        verticalAlignment: "MIDDLE",
+        notes: `Your background gives you skills. If you want to modify which skills a background lets you choose, or you want to add new backgrounds, they're the one piece of customization done on this page. If you unhide the columns to the right (by clicking/tapping the tiny little arrows that show up on the "AP" column header, thanks google /s), you'll find the Backgrounds listed starting in cell AX69, the associated skills starting in AY69, the number of extra languages starting in AZ69, the number of tool proficiencies granted starting in BA69, and the number of vehicle proficiencies granted starting in BB69. You can alter the skills to be any two you desire or add to the list of recognized Backgrounds by adding the Background to the AX column, its associated skills to the AY column, and its number of languages, tools, and vehicles proficiencies to the proper columns, starting at row 82.`
+      },
+      {
+        range: "AO11:AO28",
+        merge: true,
+        formula: `=IMAGE("http://i.imgur.com/40rhpIU.png",2)`,
+        border: {
+            top: true,
+            bottom: true,
+            color: lightGrey20
+        }
+      },
+      {
+        range: "AS11",
+        fontFamily: hiddenFontFamily,
+        fontSize: 6,
+        formula: `=if($AR11<>"",iferror(array_constrain(filter('Class Info'!$E$7:$E180,'Class Info'!$B$7:$B180=$AR11,'Class Info'!$E$7:$E180<>"",isnumber(find(proper('Class Info'!$E$7:$E180),proper($T$5)))),1,1),"-"),"")`
+      },
+      {
+        range: "AT11",
+        fontFamily: hiddenFontFamily,
+        fontSize: 6,
+        formula: `=if(and(AR11<>"",isnumber(find(lower(AR11),lower($T$5)))),int(substitute(if(regexmatch(proper($T$5),proper(AR11)&" [0-9]+"),regexextract(proper($T$5),proper(AR11)&" [0-9]+"),level),proper(AR11)&" ","")),"")`
+      },
+      {
+        range: "C12:D12",
+        merge: true,
+        value: `STR`,
+        horizontalAlignment: 'CENTER',
+        verticalAlignment: 'TOP',
+        fontFamily: hiddenFontFamily,
+        fontSize: 10,
+        textColor: black
+      },
+      {
+        range: "R12:S13",
+        merge: true,
+        formula: `=if(\nor(dexMod="-",level=""),\n"-",\nmax(armoredAC,unarmoredAC,naturalArmorAC,altClassBasedAC)\n+dualWielder\n)`,
+        horizontalAlignment: "CENTER",
+        fontSize: 20,
       }
     ]
   }
