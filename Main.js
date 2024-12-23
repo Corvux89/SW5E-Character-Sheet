@@ -1,70 +1,159 @@
+// clasp
+// npm i -g @google/clasp
+// npm i @types/google-apps-script
+// clasp clone ""
+// clasp push/pull
+
 function onOpen(e){
   var ui = SpreadsheetApp.getUi()
-  ui.createMenu('SW5E Character Sheet')
-    .addItem('Point Buy Calculator ➕➖', 'gotoPointBuy')
-    .addItem('Retest', 'retest')
-    .addToUi()
 
-  createMainPage()
+  function createMenuRecursive(parentMenu, menuData){
+    if (menuData.children){
+      const subMenu = ui.createMenu(menuData.caption)
+      menuData.children.forEach(child => createMenuRecursive(subMenu, child))
+      parentMenu.addSubMenu(subMenu)
+    } else {
+      const functionName = `openURL_${menuData.url.replace(/[^a-zA-Z0-9]/g, "_")}`
+      console.log(functionName)
+
+      this[functionName] = function(){
+        openURL(menuData.url, menuData.caption)
+      }
+
+      parentMenu.addItem(menuData.caption, functionName)
+    }
+  }
+
+  menu = ui.createMenu('SW5E Character Sheet')
+
+  menus.forEach(item => createMenuRecursive(menu, item))
+  menu.addToUi()
+}
+
+function openUrl(url, dialogTitle) {
+  const js = `<script>window.open('${url}'); google.script.host.close();</script>`;
+  const html = HtmlService.createHtmlOutput(js).setHeight(10).setWidth(100);
+  SpreadsheetApp.getUi().showModalDialog(html, dialogTitle);
 }
 
 function retest(){
-  const name = 'v2.1'
+  setupWorkbook()
+}
+
+function checkForUpdates(){
+  var scriptProperties = PropertiesService.getScriptProperties()
+  const version = scriptProperties.getProperty('version') || '1.0'
+  var patches = []
+  var newVersion = version
+
+  patches.forEach(p => {
+    const patch = {...createPatch(), ...p}
+
+    if (parseFloat(patch.version) > parseFloat(version)){
+      newVersion = patch.version
+      patches.push(patch)
+    }
+  })
+
+}
+
+function clearNamedRanges(){
+  if (SpreadsheetApp.getActiveSpreadsheet().getId() == url) throw new error (`Can't modify source sheet`)
+  clearAllNamedRanges()
+
+  var  spreadsheet = SpreadsheetApp.getActiveSpreadsheet()
+  tabs.forEach(tab => {
+    var sheet = spreadsheet.getSheetByName(tab)
+    if (sheet){
+      spreadsheet.deleteSheet(sheet)
+    }
+  })
+}
+
+function setupWorkbook(){
+  if (SpreadsheetApp.getActiveSpreadsheet().getId() == url) throw new error (`Can't modify source sheet`)
+  var  spreadsheet = SpreadsheetApp.getActiveSpreadsheet()
+  tabs.forEach(tab => {
+    var sheet = spreadsheet.getSheetByName(tab)
+    if (sheet){
+      spreadsheet.deleteSheet(sheet)
+    }
+
+    copySheet(tab)
+  })
+
+  clearAllNamedRanges()
+  copyNamedRanges(spreadsheet)
+  copyFormulasAcrossSpreadsheet()
+}
+
+function copySheet(name){
+  const sourceSS = SpreadsheetApp.openById(url)
+
+  const sourceSheet = sourceSS.getSheetByName(name)
+
+  if (!sourceSheet){
+    throw new error (`Sheet '${name}' not found`)
+  }
+
   var spreadsheet = SpreadsheetApp.getActiveSpreadsheet()
   var sheet = spreadsheet.getSheetByName(name)
 
-  if (sheet){
-    spreadsheet.deleteSheet(sheet)
-  }
-  
-  createMainPage()
-}
-
-function swapFormula(range, formula){
-  if (range.getFormulas() !== formula){
-    range.setFormula(formula)
+  if (!sheet){
+    sheet = sourceSheet.copyTo(spreadsheet)
+    sheet.setName(name)
   }
 }
 
-function sizeSheet(sheet, numRows, numColumns){
-  var currentRows = sheet.getMaxRows()
-  if (currentRows < numRows) {
-    sheet.insertRowsAfter(currentRows, numRows - currentRows)
-  } else if (currentRows > numRows){
-    sheet.deleteRows(numRows+1, currentRows-numRows)
+function copyFormulasAcrossSpreadsheet() {
+  const sourceSS = SpreadsheetApp.openById(url);
+  const targetSS = SpreadsheetApp.getActiveSpreadsheet();
+
+  tabs.forEach(tab => {
+    const sourceSheet = sourceSS.getSheetByName(tab);
+    const targetSheet = targetSS.getSheetByName(tab);
+
+    const sourceRange = sourceSheet.getDataRange();
+
+    const formulas = sourceRange.getFormulas();
+
+    const values = sourceRange.getValues();
+
+    for (let i = 0; i < values.length; i++) {
+      for (let j = 0; j < values[i].length; j++) {
+        if (formulas[i][j]) {
+          targetSheet.getRange(i + 1, j + 1).setFormula(formulas[i][j]);
+        } else {
+          targetSheet.getRange(i + 1, j + 1).setValue(values[i][j]);
+        }
+      }
+    }
+  });
+}
+function clearAllNamedRanges() {
+  var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  var namedRanges = spreadsheet.getNamedRanges();
+
+  for (let i = 0; i < namedRanges.length; i++) {
+    namedRanges[i].remove();
   }
+}
 
-  var currentColumns = sheet.getMaxColumns()
-  if (currentColumns < numColumns){
-    sheet.insertColumnsAfter(currentColumns, numColumns - currentColumns)
-  } else if (currentColumns > numColumns){
-    sheet.deleteColumns(numColumns+1, currentColumns-numColumns)
+function copyNamedRanges(targetSpreadsheet) {
+  const sourceSpreadsheet = SpreadsheetApp.openById(url);
+  const namedRanges = sourceSpreadsheet.getNamedRanges();
+
+  for (let i = 0; i < namedRanges.length; i++) {
+    const namedRange = namedRanges[i];
+    const range = namedRange.getRange(); 
+    const sourceSheetName = range.getSheet().getName(); 
+    let targetSheet = targetSpreadsheet.getSheetByName(sourceSheetName); 
+    const newRange = targetSheet.getRange(range.getA1Notation()); 
+    targetSpreadsheet.setNamedRange(namedRange.getName(), newRange);
   }
 }
-
-function protectSheet(sheet, excemptions){
-  const protection = sheet.protect()
-  protection.setWarningOnly(true)
-  if (excemptions) protection.setUnprotectedRanges(excemptions)
-}
-
-function gotoPointBuy()
-{
-   const js = " \
-    <script> \
-      window.open('https://chicken-dinner.com/5e/5e-point-buy.html'); \
-      google.script.host.close(); \
-    </script> \
-  ";
-  const html = HtmlService.createHtmlOutput(js)
-    .setHeight(10)
-    .setWidth(100)
-  SpreadsheetApp.getUi().showModalDialog(html, 'Loading Point Buy Calculator...'); // If you use this on Spreadsheet
-}
-
 function applyFormulasAndStyles(sheet, sheetFormulas) {
   sheetFormulas.forEach(attrs => {
-    // Merge defaults with overrides
     const cellAttributes = { ...createCellAttributes(), ...attrs }
 
     const range = sheet.getRange(cellAttributes.range)
@@ -113,14 +202,19 @@ function applyFormulasAndStyles(sheet, sheetFormulas) {
   })
 }
 
-function getExcemptionRanges(sheet, range_strings){
-   var ranges = []
+function createPatch() {
+  return {
+    desc: '',
+    version: '',
+    updates: {}
+  }
+}
 
-  range_strings.forEach(r => {
-    ranges.push(sheet.getRange(r))
-  })
-
-  return ranges
+function createUpdate() {
+  return {
+    sheet: '',
+    formulas: []
+  }
 }
 
 function createCellAttributes() {
@@ -155,4 +249,124 @@ function createBorderAttributes() {
     color: '',
     style: null
   }
+}
+
+function goto() {
+  return function() { 
+    var htmlOutput = HtmlService.createHtmlOutputFromFile('openURL')
+      .setSandboxMode(HtmlService.SandboxMode.IFRAME)
+      .setParameter('url', url);
+    SpreadsheetApp.getUi().showModalDialog(htmlOutput, 'Opening URL');
+  };
+}
+
+function gotoPlayersHandbook()
+{
+   var js = " \
+    <script> \
+      window.open('https://sw5e.com/rules/phb'); \
+      google.script.host.close(); \
+    </script> \
+  ";
+  var html = HtmlService.createHtmlOutput(js)
+    .setHeight(10)
+    .setWidth(100);
+  SpreadsheetApp.getUi().showModalDialog(html, 'Loading Players Handbook...'); 
+}
+
+function gotoPointBuy(){
+   const js = " \
+    <script> \
+      window.open('https://chicken-dinner.com/5e/5e-point-buy.html'); \
+      google.script.host.close(); \
+    </script> \
+  ";
+  const html = HtmlService.createHtmlOutput(js)
+    .setHeight(10)
+    .setWidth(100)
+  SpreadsheetApp.getUi().showModalDialog(html, 'Loading Point Buy Calculator...')
+}
+
+function gotoClasses()
+{
+   var js = " \
+    <script> \
+      window.open('https://sw5e.com/characters/classes'); \
+      google.script.host.close(); \
+    </script> \
+  ";
+  var html = HtmlService.createHtmlOutput(js)
+    .setHeight(10)
+    .setWidth(100)
+  SpreadsheetApp.getUi().showModalDialog(html, 'Loading Classes...')
+}
+
+function gotoSpecies()
+{
+   var js = " \
+    <script> \
+      window.open('https://sw5e.com/characters/species'); \
+      google.script.host.close(); \
+    </script> \
+  ";
+  var html = HtmlService.createHtmlOutput(js)
+    .setHeight(10)
+    .setWidth(100);
+  SpreadsheetApp.getUi().showModalDialog(html, 'Loading Species...'); 
+}
+
+function gotoBackgrounds()
+{
+   var js = " \
+    <script> \
+      window.open('https://sw5e.com/characters/backgrounds'); \
+      google.script.host.close(); \
+    </script> \
+  ";
+  var html = HtmlService.createHtmlOutput(js)
+    .setHeight(10)
+    .setWidth(100)
+  SpreadsheetApp.getUi().showModalDialog(html, 'Loading Backgrounds...')
+}
+
+function gotoFeats()
+{
+   var js = " \
+    <script> \
+      window.open('https://sw5e.com/characters/feats'); \
+      google.script.host.close(); \
+    </script> \
+  ";
+  var html = HtmlService.createHtmlOutput(js)
+    .setHeight(10)
+    .setWidth(100)
+  SpreadsheetApp.getUi().showModalDialog(html, 'Loading Feats...')
+}
+
+function gotoForce()
+{
+   var js = " \
+    <script> \
+      window.open('https://sw5e.com/characters/forcePowers'); \
+      google.script.host.close(); \
+    </script> \
+  ";
+  var html = HtmlService.createHtmlOutput(js)
+    .setHeight(10)
+    .setWidth(100)
+  SpreadsheetApp.getUi().showModalDialog(html, 'Loading Force Powers...')
+}
+
+function gotoTech()
+{
+   var js = " \
+    <script> \
+      window.open('https://sw5e.com/characters/techPowers'); \
+      google.script.host.close(); \
+    </script> \
+  ";
+  var html = HtmlService.createHtmlOutput(js)
+    .setHeight(10)
+    .setWidth(100)
+  SpreadsheetApp.getUi().showModalDialog(html, 'Loading Tech Powers...')
 }
