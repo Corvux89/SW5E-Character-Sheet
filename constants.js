@@ -28,16 +28,44 @@ const menus = [
         caption: 'SW5e Tools 🔧',
         children: [
             {
+                caption: "SW5e Players Handbook 📖",
+                function: "gotoPlayersHandbook"
+            },
+            {
                 caption: `Point Buy Calculator ➕➖`,
-                functionName: "goto",
-                url: "https://sw5e.com/tools/point-buy"
+                function: "gotoPointBuy"
+            },
+            {
+                caption: "Classes/Archtypes",
+                children: [
+                    {
+                        caption: "Classes",
+                        function: "gotoClasses"
+                    },
+                    {
+                        caption: "Additional Berserker Archetypes",
+                        children: [
+                            {
+                                caption: "Nightbrother Approach",
+                                function: "gotoNightbrother"
+                            },
+                            {
+                                caption: "Projection Approach",
+                                function: "gotoProjection"
+                            },
+                            {
+                                caption: "Bonesetter Approach",
+                                function: "gotoBonesetter"
+                            }
+                        ]   
+                    }
+                ]
             }
         ]
     },
     {
         caption: 'Feats',
-        functionName: "goto",
-        url: 'https://sw5e.com/characters/feats'
+        function: "gotoFeats",
     }
 ]
 

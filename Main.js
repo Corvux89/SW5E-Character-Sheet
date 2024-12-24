@@ -13,14 +13,7 @@ function onOpen(e){
       menuData.children.forEach(child => createMenuRecursive(subMenu, child))
       parentMenu.addSubMenu(subMenu)
     } else {
-      const functionName = `openURL_${menuData.url.replace(/[^a-zA-Z0-9]/g, "_")}`
-      console.log(functionName)
-
-      this[functionName] = function(){
-        openURL(menuData.url, menuData.caption)
-      }
-
-      parentMenu.addItem(menuData.caption, functionName)
+      parentMenu.addItem(menuData.caption, menuData.function)
     }
   }
 
@@ -28,12 +21,6 @@ function onOpen(e){
 
   menus.forEach(item => createMenuRecursive(menu, item))
   menu.addToUi()
-}
-
-function openUrl(url, dialogTitle) {
-  const js = `<script>window.open('${url}'); google.script.host.close();</script>`;
-  const html = HtmlService.createHtmlOutput(js).setHeight(10).setWidth(100);
-  SpreadsheetApp.getUi().showModalDialog(html, dialogTitle);
 }
 
 function retest(){
@@ -260,46 +247,8 @@ function goto() {
   };
 }
 
-function gotoPlayersHandbook()
-{
-   var js = " \
-    <script> \
-      window.open('https://sw5e.com/rules/phb'); \
-      google.script.host.close(); \
-    </script> \
-  ";
-  var html = HtmlService.createHtmlOutput(js)
-    .setHeight(10)
-    .setWidth(100);
-  SpreadsheetApp.getUi().showModalDialog(html, 'Loading Players Handbook...'); 
-}
 
-function gotoPointBuy(){
-   const js = " \
-    <script> \
-      window.open('https://chicken-dinner.com/5e/5e-point-buy.html'); \
-      google.script.host.close(); \
-    </script> \
-  ";
-  const html = HtmlService.createHtmlOutput(js)
-    .setHeight(10)
-    .setWidth(100)
-  SpreadsheetApp.getUi().showModalDialog(html, 'Loading Point Buy Calculator...')
-}
 
-function gotoClasses()
-{
-   var js = " \
-    <script> \
-      window.open('https://sw5e.com/characters/classes'); \
-      google.script.host.close(); \
-    </script> \
-  ";
-  var html = HtmlService.createHtmlOutput(js)
-    .setHeight(10)
-    .setWidth(100)
-  SpreadsheetApp.getUi().showModalDialog(html, 'Loading Classes...')
-}
 
 function gotoSpecies()
 {
@@ -329,18 +278,8 @@ function gotoBackgrounds()
   SpreadsheetApp.getUi().showModalDialog(html, 'Loading Backgrounds...')
 }
 
-function gotoFeats()
-{
-   var js = " \
-    <script> \
-      window.open('https://sw5e.com/characters/feats'); \
-      google.script.host.close(); \
-    </script> \
-  ";
-  var html = HtmlService.createHtmlOutput(js)
-    .setHeight(10)
-    .setWidth(100)
-  SpreadsheetApp.getUi().showModalDialog(html, 'Loading Feats...')
+function gotoFeats(){
+  openURL("https://sw5e.com/characters/feats", "Loading Feats...")
 }
 
 function gotoForce()
