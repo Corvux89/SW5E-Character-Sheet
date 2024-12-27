@@ -23,10 +23,6 @@ function onOpen(e){
   menu.addToUi()
 }
 
-function retest(){
-  setupWorkbook()
-}
-
 function checkForUpdates(){
   var scriptProperties = PropertiesService.getScriptProperties()
   const version = scriptProperties.getProperty('version') || '1.0'
@@ -236,76 +232,4 @@ function createBorderAttributes() {
     color: '',
     style: null
   }
-}
-
-function goto() {
-  return function() { 
-    var htmlOutput = HtmlService.createHtmlOutputFromFile('openURL')
-      .setSandboxMode(HtmlService.SandboxMode.IFRAME)
-      .setParameter('url', url);
-    SpreadsheetApp.getUi().showModalDialog(htmlOutput, 'Opening URL');
-  };
-}
-
-
-
-
-function gotoSpecies()
-{
-   var js = " \
-    <script> \
-      window.open('https://sw5e.com/characters/species'); \
-      google.script.host.close(); \
-    </script> \
-  ";
-  var html = HtmlService.createHtmlOutput(js)
-    .setHeight(10)
-    .setWidth(100);
-  SpreadsheetApp.getUi().showModalDialog(html, 'Loading Species...'); 
-}
-
-function gotoBackgrounds()
-{
-   var js = " \
-    <script> \
-      window.open('https://sw5e.com/characters/backgrounds'); \
-      google.script.host.close(); \
-    </script> \
-  ";
-  var html = HtmlService.createHtmlOutput(js)
-    .setHeight(10)
-    .setWidth(100)
-  SpreadsheetApp.getUi().showModalDialog(html, 'Loading Backgrounds...')
-}
-
-function gotoFeats(){
-  openURL("https://sw5e.com/characters/feats", "Loading Feats...")
-}
-
-function gotoForce()
-{
-   var js = " \
-    <script> \
-      window.open('https://sw5e.com/characters/forcePowers'); \
-      google.script.host.close(); \
-    </script> \
-  ";
-  var html = HtmlService.createHtmlOutput(js)
-    .setHeight(10)
-    .setWidth(100)
-  SpreadsheetApp.getUi().showModalDialog(html, 'Loading Force Powers...')
-}
-
-function gotoTech()
-{
-   var js = " \
-    <script> \
-      window.open('https://sw5e.com/characters/techPowers'); \
-      google.script.host.close(); \
-    </script> \
-  ";
-  var html = HtmlService.createHtmlOutput(js)
-    .setHeight(10)
-    .setWidth(100)
-  SpreadsheetApp.getUi().showModalDialog(html, 'Loading Tech Powers...')
 }

@@ -43,7 +43,7 @@ const menus = [
                         function: "gotoClasses"
                     },
                     {
-                        caption: "Additional Berserker Archetypes",
+                        caption: "Additional Berserker Archetypes (Homebrews)",
                         children: [
                             {
                                 caption: "Nightbrother Approach",
@@ -58,14 +58,53 @@ const menus = [
                                 function: "gotoBonesetter"
                             }
                         ]   
+                    },
+                    {
+                        caption: "Additional Consular Archetypes (Homebrews)",
+                        children: [
+                            
+                        ]
+                    }
+                ]
+            },
+            {
+                caption: "Species/Races",
+                function: "gotoSpecies"
+            },
+            {
+                caption: "Backgrounds",
+                function: "gotoBackgrounds"
+            },
+            {
+                caption: 'Feats',
+                function: "gotoFeats",
+            },
+            {
+                caption: "Powers",
+                children: [
+                    {
+                        caption: "Force Powers",
+                        function: "gotoForcePowers"
+                    },
+                    {
+                        caption: "Expanded Force Powers (Homebrew)",
+                        function: "gotoExpandedForcePowers"
+                    },
+                    {
+                        caption: "Tech Powers",
+                        function: "gotoTechPowers"
+                    },
+                    {
+                        caption: "Expanded Tech Powers (Homebrew)",
+                        function: "gotoExpandedTechPowers"
+                    },
+                    {
+                        caption: "New Tech Powers (Homebrew)",
+                        function: "gotoNewTechPowers"
                     }
                 ]
             }
         ]
-    },
-    {
-        caption: 'Feats',
-        function: "gotoFeats",
     }
 ]
 
